@@ -4,5 +4,8 @@ TODO:
 [x] make a script that will queue prompt the worflow.json
 [x] write a argeparse to read the worflow.json and print out the exposed params
 [x] make argeparse  script to both print and queue the prompt
-[] add option for queing
+[x] add option for queing or just reading the exposed nodes
+[x] create a new file specific for the workflow
+[] optimizer new file
+[] make more todos...
 

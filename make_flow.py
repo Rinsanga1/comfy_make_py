@@ -1,10 +1,4 @@
 import argparse
-import requests
-import urllib.parse
-import urllib.request
-import uuid
-import websocket
-import random
 import json
 
 parser = argparse.ArgumentParser(description="takes the path for the workflow")
@@ -18,7 +12,7 @@ with open(args.queue, "r") as file:
 for node_id, node in data.items():
     if "exposed" in node["_meta"]["title"]:
         print(f"Exposed Nodes : '{node['_meta']['title']}':")
-        print(node["inputs"])
+        print(f" Node Id :{node_id}")
 
 
 """
@@ -29,6 +23,14 @@ for node_id, node in data.items():
         print(node["inputs"])
     """
 
+queue_prompt = """
+import random
+import websocket
+import uuid
+import json
+import urllib.request
+import urllib.parse
+import requests
 
 server_address = "127.0.0.1:8188"
 client_id = str(uuid.uuid4())
@@ -89,11 +91,28 @@ def get_images(ws, prompt):
 
 
 # load workflow from file
+with open("workflow_api.json", "r", encoding="utf-8") as f:
+    workflow_data = f.read()
 
-workflow = data
+workflow = json.loads(workflow_data)
+
+# set the text prompt for our positive CLIPTextEncode
+workflow["6"]["inputs"]["text"] = (
+    "masterpiece, best quality, perfect man"
+)
+workflow["7"]["inputs"]["text"] = (
+    "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry , deformed,nsfw, deformed legs"
+)
 
 ws = websocket.WebSocket()
 ws.connect("ws://{}/ws?clientId={}".format(server_address, client_id))
-
 images = get_images(ws, workflow)
-print("dont queue ing")
+
+        """
+
+option_prompt_file = input("make a prompt file ? (y/n) :")
+if option_prompt_file == "y":
+    with open("queue_prompt.py", "w") as file:
+        file.write(queue_prompt)
+else:
+    pass
