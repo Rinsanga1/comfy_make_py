@@ -1,30 +1,4 @@
-import argparse
-import json
 
-parser = argparse.ArgumentParser(description="takes the path for the workflow")
-parser.add_argument("-q", "--queue", type=str, help="The path of the workflow")
-args = parser.parse_args()
-
-with open(args.queue, "r") as file:
-    data = json.load(file)
-
-
-for node_id, node in data.items():
-    if "exposed" in node["_meta"]["title"]:
-        print(f"Exposed Nodes : '{node['_meta']['title']}':")
-        print(f" Node Id :{node_id}")
-
-
-"""
-print("example processing it")
-for node_id, node in data.items():
-    if "exposed" in node["_meta"]["title"]:
-        node["inputs"]["text"] = "changedinputs"
-        print(node["inputs"])
-    """
-
-path = f'"{args.queue}"'
-queue_prompt = f"""
 import random
 import websocket
 import uuid
@@ -38,32 +12,32 @@ client_id = str(uuid.uuid4())
 
 
 def queue_prompt(prompt):
-    p = {{"prompt": prompt, "client_id": client_id}}
+    p = {"prompt": prompt, "client_id": client_id}
     data = json.dumps(p).encode("utf-8")
     req = urllib.request.Request(
-        "http://{{}}/prompt".format(server_address), data=data)
+        "http://{}/prompt".format(server_address), data=data)
     return json.loads(urllib.request.urlopen(req).read())
 
 
 def get_image(filename, subfolder, folder_type):
-    data = {{"filename": filename, "subfolder": subfolder, "type": folder_type}}
+    data = {"filename": filename, "subfolder": subfolder, "type": folder_type}
     url_values = urllib.parse.urlencode(data)
     with urllib.request.urlopen(
-        "http://{{}}/view?{{}}".format(server_address, url_values)
+        "http://{}/view?{}".format(server_address, url_values)
     ) as response:
         return response.read()
 
 
 def get_history(prompt_id):
     with urllib.request.urlopen(
-        "http://{{}}/history/{{}}".format(server_address, prompt_id)
+        "http://{}/history/{}".format(server_address, prompt_id)
     ) as response:
         return json.loads(response.read())
 
 
 def get_images(ws, prompt):
     prompt_id = queue_prompt(prompt)["prompt_id"]
-    output_images = {{}}
+    output_images = {}
     while True:
         out = ws.recv()
         if isinstance(out, str):
@@ -92,7 +66,7 @@ def get_images(ws, prompt):
 
 
 # load workflow from file
-with open({path}, "r", encoding="utf-8") as f:
+with open("example_api.json", "r", encoding="utf-8") as f:
     workflow_data = f.read()
 
 workflow = json.loads(workflow_data)
@@ -106,15 +80,6 @@ workflow["7"]["inputs"]["text"] = (
 )
 
 ws = websocket.WebSocket()
-ws.connect("ws://{{}}/ws?clientId={{}}".format(server_address, client_id))
+ws.connect("ws://{}/ws?clientId={}".format(server_address, client_id))
 images = get_images(ws, workflow)
 
-"""
-
-
-option_prompt_file = input("make a prompt file ? (y/n) :")
-if option_prompt_file == "y":
-    with open("queue_prompt.py", "w") as file:
-        file.write(queue_prompt)
-else:
-    pass
