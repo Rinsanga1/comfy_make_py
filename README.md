@@ -1,11 +1,13 @@
-TODO:
+# Turn comfy Worflow to Flask Restx Api
 
-[x] write a script to read and print out worflow.json
-[x] make a script that will queue prompt the worflow.json
-[x] write a argeparse to read the worflow.json and print out the exposed params
-[x] make argeparse  script to both print and queue the prompt
-[x] add option for queing or just reading the exposed nodes
-[x] create a new file specific for the workflow
 
-[] make more todos...
+### Usage
+to turn your 'example.json' to api
+
+` python3 make_flow.py -q example.json`
+
+<br>
+it should give you option to generate the file or not
+<br>
+you can also specify the params you want to exposed by putting the 'exposed' keyword on your node titles
 
