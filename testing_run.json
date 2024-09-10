@@ -1,0 +1,205 @@
+{
+  "1": {
+    "inputs": {
+      "seed": 117705328545051,
+      "steps": 30,
+      "cfg": 7,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "denoise": 1,
+      "model": [
+        "52",
+        0
+      ],
+      "positive": [
+        "3",
+        0
+      ],
+      "negative": [
+        "4",
+        0
+      ],
+      "latent_image": [
+        "5",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "2": {
+    "inputs": {
+      "ckpt_name": "epicrealism_naturalSinRC1VAE.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "3": {
+    "inputs": {
+      "text": "photoshoot, beautiful morocco woman in black top and jeans, slender, \nstanding in streets of Moscow, full body, dynamic pose",
+      "speak_and_recognation": true,
+      "clip": [
+        "50",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt) exposed"
+    }
+  },
+  "4": {
+    "inputs": {
+      "text": "ugly, deformed",
+      "speak_and_recognation": true,
+      "clip": [
+        "50",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "5": {
+    "inputs": {
+      "width": 512,
+      "height": 768,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "16": {
+    "inputs": {
+      "samples": [
+        "53",
+        0
+      ],
+      "vae": [
+        "19",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "19": {
+    "inputs": {
+      "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "49": {
+    "inputs": {
+      "ckpt_name": "epicphotogasmLCM_ultimatefidelity.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "50": {
+    "inputs": {
+      "ratio": 0.5,
+      "clip1": [
+        "2",
+        1
+      ],
+      "clip2": [
+        "49",
+        1
+      ]
+    },
+    "class_type": "CLIPMergeSimple",
+    "_meta": {
+      "title": "CLIPMergeSimple"
+    }
+  },
+  "52": {
+    "inputs": {
+      "ratio": 0.5,
+      "model1": [
+        "2",
+        0
+      ],
+      "model2": [
+        "49",
+        0
+      ]
+    },
+    "class_type": "ModelMergeSimple",
+    "_meta": {
+      "title": "ModelMergeSimple"
+    }
+  },
+  "53": {
+    "inputs": {
+      "seed": 117705328545051,
+      "steps": 30,
+      "cfg": 7,
+      "sampler_name": "dpmpp_2m_sde",
+      "scheduler": "karras",
+      "denoise": 0.55,
+      "model": [
+        "52",
+        0
+      ],
+      "positive": [
+        "3",
+        0
+      ],
+      "negative": [
+        "4",
+        0
+      ],
+      "latent_image": [
+        "57",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "55": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "16",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "57": {
+    "inputs": {
+      "upscale_method": "bislerp",
+      "scale_by": 2,
+      "samples": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "LatentUpscaleBy",
+    "_meta": {
+      "title": "Upscale Latent By"
+    }
+  }
+}

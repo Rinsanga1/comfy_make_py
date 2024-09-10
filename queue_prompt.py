@@ -1,4 +1,6 @@
 
+from flask import Flask
+from flask_restx import Api, Resource
 import random
 import websocket
 import uuid
@@ -6,6 +8,9 @@ import json
 import urllib.request
 import urllib.parse
 import requests
+
+app = Flask(__name__)
+api = Api(app)
 
 server_address = "127.0.0.1:8188"
 client_id = str(uuid.uuid4())
@@ -65,21 +70,24 @@ def get_images(ws, prompt):
     return output_images
 
 
-# load workflow from file
-with open("example_api.json", "r", encoding="utf-8") as f:
-    workflow_data = f.read()
+@api.route("/queue")
+class QueuePrompt(Resource):
+    def post(self):
+        with open("example_api.json", "r", encoding="utf-8") as f:
+            workflow_data = f.read()
 
-workflow = json.loads(workflow_data)
+        workflow = json.loads(workflow_data)
 
-# set the text prompt for our positive CLIPTextEncode
-workflow["6"]["inputs"]["text"] = (
-    "masterpiece, best quality, perfect man"
-)
-workflow["7"]["inputs"]["text"] = (
-    "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry , deformed,nsfw, deformed legs"
-)
 
-ws = websocket.WebSocket()
-ws.connect("ws://{}/ws?clientId={}".format(server_address, client_id))
-images = get_images(ws, workflow)
+        #connect to websocket
+        ws = websocket.WebSocket()
+        ws.connect("ws://{}/ws?clientId={}".format(server_address, client_id))
 
+        #generated imgaes
+        images = get_images(ws, workflow)
+        ws.close()
+
+        return {"message": "Images generated succesfully", "image_count": len(images)}
+
+if __name__ == "__main__":
+    app.run(debug=True)

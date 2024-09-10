@@ -6,6 +6,6 @@ TODO:
 [x] make argeparse  script to both print and queue the prompt
 [x] add option for queing or just reading the exposed nodes
 [x] create a new file specific for the workflow
-[] optimizer new file
+
 [] make more todos...
 
